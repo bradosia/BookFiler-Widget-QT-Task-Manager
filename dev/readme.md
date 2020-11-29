@@ -38,13 +38,13 @@ Here is an example of how the `QTreeView` will by dynamically created by the `sq
 
 `sqlite3` table columns: guid, parent_guid, Subject, Important, Attachment, From, Date, Size. Hidden columns: guid, parent_guid.
 
-![Style 1](https://github.com/bradosia/BookFiler-Lib-Sort-Filter-Tree-Widget/blob/main/reference/window-bg-tasks-overview.png?raw=true)
+![Style 1](/reference/window-bg-tasks-overview.png?raw=true)
 
 ### Example 2
 
 `sqlite3` table columns: guid, parent_guid, Name. Hidden columns: guid, parent_guid.
 
-![Style 2](https://github.com/bradosia/BookFiler-Lib-Sort-Filter-Tree-Widget/blob/main/reference/window-bg-tasks-subtasks.png?raw=true)
+![Style 2](/reference/window-bg-tasks-subtasks.png?raw=true)
 
 ## Sorting and Filtering Implementation
 
