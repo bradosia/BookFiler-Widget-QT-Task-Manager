@@ -4,9 +4,9 @@ I need a QT5 widget written in C++. Only the widget implementation needs to be w
 
 Header: [/src/UI/WidgetTaskList.hpp](/src/UI/WidgetTaskList.hpp)
 
-![/reference/widget-overview.png](/reference/widget-overview.png)
+![/reference/widget-overview.png](/reference/widget-overview.png?raw=true)
 
-![/reference/widget-tasklist-subtasks.png](/reference/widget-tasklist-subtasks.png)
+![/reference/widget-tasklist-subtasks.png](/reference/widget-tasklist-subtasks.png?raw=true)
 
 Header: [/src/UI/WidgetTaskItem.hpp](/src/UI/WidgetTaskItem.hpp)
 
