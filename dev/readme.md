@@ -35,8 +35,8 @@ database.reset(dbPtr, sqlite3_close);
 
 Create the tree widget and set the database data
 ```cpp
-std::shared_ptr<bookfiler::widget::TaskList> taskManagerWidget =
-      std::make_shared<bookfiler::widget::TaskList>();
+bookfiler::widget::TaskList* taskManagerWidget =
+      new bookfiler::widget::TaskList();
 taskManagerWidget->setData(database, "taskList");
 taskManagerWidget->update();
 ```
@@ -72,7 +72,7 @@ CREATE TABLE "taskList" (
 ```
 
 ## Coding Standards
-Always use the standard library when possible. Use `std::shared_ptr` and `std::unique_ptr` instead of raw pointers whenever possible. use `boost` if some method does not exist in standard library. Finally use `QT5` as the last option.
+Always use the standard library when possible. Use `std::shared_ptr` and `std::unique_ptr` instead of raw pointers whenever possible, except when creating widgets since the the QT UI will Immediately take control of the widget. use `boost` if some method does not exist in standard library. Finally use `QT5` as the last option. For example use `std::string` instead of `QString` so the code is more portable. Use `QString` only when necessary to pass to a QT function.
 
 Separate all graphical GUI code into the `/src/UI/` directory. Anything with `QT` should be in the `/src/UI/` directory. All logic and non-GUI code goes into the `/src/core/` directory.
 
