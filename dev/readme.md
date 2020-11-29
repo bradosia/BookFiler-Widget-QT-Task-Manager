@@ -12,6 +12,10 @@ Header: [/src/UI/WidgetTaskItem.hpp](/src/UI/WidgetTaskItem.hpp)
 
 ![/reference/widget-laskitem.png](/reference/widget-laskitem.png?raw=true)
 
+# How does the toolbar work?
+
+The toolbar filters tasks by the status code. The code 0 and 1 = In Progress, 2 = Success, 3 = Cancelled, 4 = Failed. There should also be a button to clear the filters.
+
 Header: [/src/UI/WidgetTaskToolBar.hpp](/src/UI/WidgetTaskToolBar.hpp)
 
 ![/reference/widget-toolbar.png](/reference/widget-toolbar.png?raw=true)
@@ -71,6 +75,8 @@ CREATE TABLE "taskList" (
 )
 ```
 
+# Why is `sqlite3` used and not ``
+
 ## Coding Standards
 Always use the standard library when possible. Use `std::shared_ptr` and `std::unique_ptr` instead of raw pointers whenever possible, except when creating widgets since the the QT UI will Immediately take control of the widget. use `boost` if some method does not exist in standard library. Finally use `QT5` as the last option. For example use `std::string` instead of `QString` so the code is more portable. Use `QString` only when necessary to pass to a QT function.
 
@@ -82,7 +88,9 @@ Separate all graphical GUI code into the `/src/UI/` directory. Anything with `QT
 
 ## Deliverables
 
-* Clean and commented code that follows the general design already provided and discussed here
+* Clean and commented code that follows the general design already provided and discussed in the readme.
+* Widget is implemented with the interface the header files outlined.
 * A working example [/src_example/example00/main.cpp](/src_example/example00/main.cpp).
-* tasks are selectable and copyable as tab separated values.
+* tasks are selectable and copyable as tab separated values in the clipboard.
+* Widget works and looks as the photos show.
 
