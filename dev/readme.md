@@ -10,11 +10,11 @@ Header: [/src/UI/WidgetTaskList.hpp](/src/UI/WidgetTaskList.hpp)
 
 Header: [/src/UI/WidgetTaskItem.hpp](/src/UI/WidgetTaskItem.hpp)
 
-[/reference/widget-laskitem.png](/reference/widget-laskitem.png)
+![/reference/widget-laskitem.png](/reference/widget-laskitem.png?raw=true)
 
 Header: [/src/UI/WidgetTaskToolBar.hpp](/src/UI/WidgetTaskToolBar.hpp)
 
-[/reference/widget-toolbar.png](/reference/widget-toolbar.png)
+![/reference/widget-toolbar.png](/reference/widget-toolbar.png?raw=true)
 
 ## Libraries, Compiler, and compatability
 
