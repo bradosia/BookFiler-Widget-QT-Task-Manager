@@ -48,7 +48,8 @@ The widget only reads from the database to get data to display the tasks. There 
 2. The widget can be set to poll in intervals for the progress with `taskManagerWidget->setPollDuration()`
 
 ## Sqlite3 Table format
-The default table create statement is shown below. The Table name and column names may be different, but the user must explicitly map the names.
+The default table create statement is shown below. The Table name and column names may be different, but the user must explicitly map the names with the columnMap argument in `taskManagerWidget->setData(std::shared_ptr<sqlite3> database, std::string tableName, std::map<std::string, std::string> columnMap)`
+
 ```sql
 CREATE TABLE "taskList" (
 	"id"	INTEGER NOT NULL,
