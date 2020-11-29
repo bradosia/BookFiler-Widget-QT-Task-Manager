@@ -35,11 +35,17 @@ database.reset(dbPtr, sqlite3_close);
 
 Create the tree widget and set the database data
 ```cpp
-std::shared_ptr<bookfiler::widget::TreeImpl> treeWidget =
-      std::make_shared<bookfiler::widget::TreeImpl>();
-treeWidget->setData(database, "taskList");
-treeWidget->update();
+std::shared_ptr<bookfiler::widget::TaskList> taskManagerWidget =
+      std::make_shared<bookfiler::widget::TaskList>();
+taskManagerWidget->setData(database, "taskList");
+taskManagerWidget->update();
 ```
+
+# How tasks are updated?
+
+The widget only reads from the database to get data to display the tasks. There are two ways to update task progress in the widget view:
+1. The actual tasks will signal when they need the widget view to update by calling `taskManagerWidget->update()` or `taskManagerWidget->updateIdHint(...);`
+2. The widget can be set to poll in intervals for the progress with `taskManagerWidget->setPollDuration()`
 
 ## Sqlite3 Table format
 The default table create statement is shown below. The Table name and column names may be different, but the user must explicitly map the names.
