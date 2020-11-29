@@ -1,18 +1,30 @@
 # Development Summary
 
-I need a QT5 widget written in C++ for a desktop application. The Libraries used are QT, Boost, and sqlite3. I need a custom `QTableView` created that is able to be sorted, filtered, and edited using sqlite3 as the backend. To Sort and filter you need to use SQL queries to reorder the data. The widget should be able to handle at least one thousand rows in the view not including all the child elements.
+I need a QT5 widget written in C++. Only the widget implementation needs to be written, not an app. The widget is a task manager that consists of three components: The task list, the task items, and the task toolbar. The implementation requires a sqlite3 database backend. The header files are already written so the implementation should be filled in. See the photos for how the task manager should look.
 
-I already started on the code. See the header I started for how to use each method of the widget [/src/UI/MainWidget.hpp](https://github.com/bradosia/BookFiler-Lib-Sort-Filter-Tree-Widget/blob/main/src/UI/MainWidget.hpp).
+Header: [/src/UI/WidgetTaskList.hpp](/src/UI/WidgetTaskList.hpp)
 
-## Compiler and compatability
+[/reference/widget-overview.png](/reference/widget-overview.png)
+
+[/reference/widget-tasklist-subtasks.png](/reference/widget-tasklist-subtasks.png)
+
+Header: [/src/UI/WidgetTaskItem.hpp](/src/UI/WidgetTaskItem.hpp)
+
+[/reference/widget-laskitem.png](/reference/widget-laskitem.png)
+
+Header: [/src/UI/WidgetTaskToolBar.hpp](/src/UI/WidgetTaskToolBar.hpp)
+
+[/reference/widget-toolbar.png](/reference/widget-toolbar.png)
+
+## Libraries, Compiler, and compatability
+
+The Libraries used are QT, Boost, and sqlite3. Other libraries need to be approved before use.
 
 Program must compile on Windows and Linux. For Windows, use MinGW for compiling. For Linux use GCC. Use cmake as the build scipt. Personally, the IDE I use is QT Creator, but any should work as long as you can build with cmake.
 
-## `QTreeView` column dynamic sizing
+# Usage Instructions
 
-The `QTreeView` columns must be dynamically created to be the same as the `sqlite3` table passed to the widget. You must use an SQL query to detect the columns in the table and dynamically create a view for it. `sqlite3` table must have the columns `guid` and `guid_parent` (the name of the column can be different, the columns must have the same purpose) so that the tree view children can be built off this. 
-
-For example, I should be able to connect any database that is set up with columns `guid` and `guid_parent`:
+Connect to your database:
 ```cpp
 sqlite3 *dbPtr = nullptr;
 sqlite3_open("myDatabase.db", &dbPtr);
@@ -21,34 +33,36 @@ std::shared_ptr<sqlite3> database(nullptr);
 database.reset(dbPtr, sqlite3_close);
 ```
 
-Then I should be able to create the tree widget and set the database data.
+Create the tree widget and set the database data
 ```cpp
 std::shared_ptr<bookfiler::widget::TreeImpl> treeWidget =
       std::make_shared<bookfiler::widget::TreeImpl>();
-treeWidget->setData(database, "testTable", "guid", "parent_guid");
-// Set the view to show all rows with column "parent_guid"==NULL
-treeWidget->setRoot("*"); 
-// Update the internal implementation
+treeWidget->setData(database, "taskList");
 treeWidget->update();
 ```
 
-Here is an example of how the `QTreeView` will by dynamically created by the `sqlite3` table:
-
-### Example 1
-
-`sqlite3` table columns: guid, parent_guid, Subject, Important, Attachment, From, Date, Size. Hidden columns: guid, parent_guid.
-
-![Style 1](/reference/window-bg-tasks-overview.png?raw=true)
-
-### Example 2
-
-`sqlite3` table columns: guid, parent_guid, Name. Hidden columns: guid, parent_guid.
-
-![Style 2](/reference/window-bg-tasks-subtasks.png?raw=true)
-
-## Sorting and Filtering Implementation
-
-You may use `QSortFilterProxyModel` to help with sorting and filtering. 
+## Sqlite3 Table format
+The default table create statement is shown below. The Table name and column names may be different, but the user must explicitly map the names.
+```sql
+CREATE TABLE "taskList" (
+	"id"	INTEGER NOT NULL,
+	"parentId"	INTEGER NOT NULL,
+	"partsDone"	INTEGER,
+	"partsTotal"	INTEGER,
+	"timeElapsed"	INTEGER,
+	"timeRemaining"	INTEGER,
+	"timeTotal"	INTEGER,
+	"CanCancel"	INTEGER NOT NULL,
+	"IsCancel"	INTEGER NOT NULL,
+	"CanPause"	INTEGER NOT NULL,
+	"IsPause"	INTEGER NOT NULL,
+	"status"	INTEGER,
+	"IsSelected"	INTEGER,
+	"title"	TEXT,
+	"description"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+)
+```
 
 ## Coding Standards
 Always use the standard library when possible. Use `std::shared_ptr` and `std::unique_ptr` instead of raw pointers whenever possible. use `boost` if some method does not exist in standard library. Finally use `QT5` as the last option.
