@@ -6,7 +6,7 @@
  */
 
 // Local Project
-#include "WidgetTaskItem.hpp"
+#include "TaskItem.hpp"
 
 /*
  * bookfiler - widget
@@ -16,14 +16,6 @@ namespace widget {
 
 TaskItem::TaskItem(){};
 TaskItem::~TaskItem(){};
-
-int TaskItem::setTitle(std::string title) { return 0; }
-
-std::string TaskItem::getTitle() { return std::string(); }
-
-int TaskItem::setDescription(std::string title) { return 0; }
-
-std::string TaskItem::getDescription() { return std::string(); }
 
 } // namespace widget
 } // namespace bookfiler

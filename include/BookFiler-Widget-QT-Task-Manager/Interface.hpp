@@ -5,12 +5,12 @@
  * @brief Task Manager Widget tracks task progress
  */
 
-#ifndef BOOKFILER_LIBRARY_SORT_FILTER_TREE_WIDGET_INTERFACE_H
-#define BOOKFILER_LIBRARY_SORT_FILTER_TREE_WIDGET_INTERFACE_H
+#ifndef BOOKFILER_WIDGET_QT_TASK_MANAGER_INTERFACE_H
+#define BOOKFILER_WIDGET_QT_TASK_MANAGER_INTERFACE_H
 
 // local project
-#include "../src/UI/WidgetTaskList.hpp"
-#include "../src/UI/WidgetTaskToolBar.hpp"
+#include "../src/UI/TaskList.hpp"
+#include "../src/UI/TaskToolBar.hpp"
 
 /*
  * bookfiler - widget
@@ -23,4 +23,4 @@ namespace widget {
 } // namespace bookfiler
 
 #endif
-// end BOOKFILER_LIBRARY_SORT_FILTER_TREE_WIDGET_INTERFACE_H
+// end BOOKFILER_WIDGET_QT_TASK_MANAGER_INTERFACE_H

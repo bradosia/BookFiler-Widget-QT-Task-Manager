@@ -14,10 +14,12 @@
 // C++
 #include <string>
 
+#ifdef DEPENDENCY_BOOST
 /* boost 1.72.0
  * License: Boost Software License (similar to BSD and MIT)
  */
 #define BOOST_ALLOW_DEPRECATED_HEADERS
+#endif
 
 namespace bookfiler {
 namespace widget {

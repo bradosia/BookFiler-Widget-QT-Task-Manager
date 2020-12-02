@@ -13,23 +13,13 @@
 
 // C++17
 #include <chrono>
+#include <functional>
 #include <iostream>
-#include <map>
 #include <memory>
 #include <string>
 
-/* boost 1.72.0
- * License: Boost Software License (similar to BSD and MIT)
- */
-#include <boost/signals2.hpp>
-
-/* sqlite3 3.33.0
- * License: PublicDomain
- */
-#include <sqlite3.h>
-
 // Local Project
-// #include "Item.hpp"
+// #include "LocalFile"
 
 /*
  * bookfiler - widget
@@ -51,31 +41,10 @@ private:
   std::function<int(int &partsDone, int &partsTotal,
                     std::chrono::milliseconds &timeRemaining)>
   getProgress();
-  std::function<int()> doCancel();
-  std::function<int()> doPause();
 
 public:
   TaskItem();
   ~TaskItem();
-
-  /* Sets the task title
-   * @param title task title
-   * @return 0 on success, else error code
-   */
-  int setTitle(std::string title);
-  /* Gets the task title
-   * @return task title
-   */
-  std::string getTitle();
-  /* Sets the task description
-   * @param title task description
-   * @return 0 on success, else error code
-   */
-  int setDescription(std::string title);
-  /* Gets the task description
-   * @return task description
-   */
-  std::string getDescription();
 };
 
 } // namespace widget

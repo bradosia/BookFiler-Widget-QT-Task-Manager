@@ -10,6 +10,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${RELEASE_DIR})
 option(BUILD_SHARED_LIBS "Build shared library" ON)
 option(BUILD_STATIC_LIBS "Build static library" OFF)
 option(BUILD_EXAMPLES "Build example executables" ON)
+option(DEPENDENCY_BOOST_SQLITE "Allow boost and sqlite" OFF)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -25,7 +26,7 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt5Widgets REQUIRED)
+find_package(Qt5 REQUIRED COMPONENTS Core Widgets Sql)
 
 find_package(Boost REQUIRED COMPONENTS
              system filesystem)
@@ -39,17 +40,17 @@ link_directories(
 
 # Set up source files
 set(SOURCES
-    src/UI/WidgetTaskList.cpp
-    src/UI/WidgetTaskToolBar.cpp
-    src/UI/WidgetTaskItem.cpp
+    src/UI/TaskList.cpp
+    src/UI/TaskToolBar.cpp
+    src/UI/TaskItem.cpp
 )
 
 set(HEADERS
     src/core/config.hpp
 
-    src/UI/WidgetTaskList.hpp
-    src/UI/WidgetTaskToolBar.hpp
-    src/UI/WidgetTaskItem.hpp
+    src/UI/TaskList.hpp
+    src/UI/TaskToolBar.hpp
+    src/UI/TaskItem.hpp
 
     include/BookFiler-Widget-QT-Task-Manager/Interface.hpp
 )
@@ -62,17 +63,33 @@ set(STATIC_COMPILE_DEFINITIONS
   -DSTATIC_LIBRARY
 )
 
+set(OTHER_COMPILE_DEFINITIONS
+
+)
+
+if(DEPENDENCY_BOOST_SQLITE)
+    set(OTHER_COMPILE_DEFINITIONS
+      -DDEPENDENCY_BOOST
+      -DDEPENDENCY_SQLITE
+    )
+endif()
+
 set(LIBRARIES ${LIBRARIES}
     # QT5
     Qt5::Widgets
-
-    # Boost
-    Boost::system
-    Boost::filesystem
-
-    # sqlite3
-    sqlite3
+    Qt5::Sql
 )
+
+if(DEPENDENCY_BOOST_SQLITE)
+    set(LIBRARIES ${LIBRARIES}
+        # Boost
+        Boost::system
+        Boost::filesystem
+
+        # sqlite3
+        sqlite3
+    )
+endif()
 
 if(WIN32)
     set(LIBRARIES ${LIBRARIES}
@@ -105,7 +122,7 @@ if(BUILD_SHARED_LIBS)
     #set_target_properties(${lib_shared_name} PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS "ON")
 
     # Compile Definitions
-    target_compile_definitions(${lib_shared_name} PUBLIC ${SHARED_COMPILE_DEFINITIONS})
+    target_compile_definitions(${lib_shared_name} PUBLIC ${SHARED_COMPILE_DEFINITIONS} ${OTHER_COMPILE_DEFINITIONS})
     # Libraries to link
     target_link_libraries(${lib_shared_name} PUBLIC ${SHARED_LINK_LIBRARIES})
     if(UNIX)
@@ -124,7 +141,7 @@ if(BUILD_STATIC_LIBS)
     )
 
     # Compile Definitions
-    target_compile_definitions(${lib_name} PUBLIC ${STATIC_COMPILE_DEFINITIONS})
+    target_compile_definitions(${lib_name} PUBLIC ${STATIC_COMPILE_DEFINITIONS} ${OTHER_COMPILE_DEFINITIONS})
     # Libraries to link
     target_link_libraries(${lib_name} PUBLIC ${STATIC_LINK_LIBRARIES})
 endif()
@@ -133,7 +150,10 @@ endif()
 #add_subdirectory(third_party/NONE)
 
 # EXAMPLES
-add_subdirectory(src_example/example00)
+if(DEPENDENCY_BOOST_SQLITE)
+    add_subdirectory(src_example/example00)
+endif()
+add_subdirectory(src_example/example01)
 
 # Post build
 if(BUILD_SHARED_LIBS)

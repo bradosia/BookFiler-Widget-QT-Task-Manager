@@ -6,7 +6,7 @@
  */
 
 // Local Project
-#include "WidgetTaskToolBar.hpp"
+#include "TaskToolBar.hpp"
 
 /*
  * bookfiler - widget
