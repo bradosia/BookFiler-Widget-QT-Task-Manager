@@ -85,6 +85,8 @@ Separate all graphical GUI code into the `/src/UI/` directory. Anything with `QT
 * Use camel case
 * Use C++17 best coding practices
 * Use the standard library when possible
+* Use .hpp files for C++ headers and .cpp files for C++ source
+* Use namespace bookfiler::widget for all `QWidget` and derivatives.
 
 ## Deliverables
 
