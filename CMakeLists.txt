@@ -43,6 +43,10 @@ set(SOURCES
     src/UI/TaskList.cpp
     src/UI/TaskToolBar.cpp
     src/UI/TaskItem.cpp
+
+    src/QModel/SqliteModelIndex.cpp
+    src/QModel/SqliteModel.cpp
+    src/QModel/SqliteModelTest.cpp
 )
 
 set(HEADERS
@@ -51,6 +55,10 @@ set(HEADERS
     src/UI/TaskList.hpp
     src/UI/TaskToolBar.hpp
     src/UI/TaskItem.hpp
+
+    src/QModel/SqliteModelIndex.hpp
+    src/QModel/SqliteModel.hpp
+    src/QModel/SqliteModelTest.hpp
 
     include/BookFiler-Widget-QT-Task-Manager/Interface.hpp
 )

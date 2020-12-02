@@ -64,6 +64,24 @@ public:
    */
   int update();
 
+  /* Called when the sqlite3 database is updated by another widget, thread, or
+   * process. Internally, this method will need to ask the model for the list of
+   * QModelIndex that need to be updated.
+   * @param addedIdList a list of id that were added. Only the
+   * row id provided was added, not the children, unless the child id is
+   * also listed
+   * @param updatedIdList a list of id that were updated. Only the
+   * row id provided was updated, not the children, unless the child id is
+   * also listed
+   * @param deletedIdList a list of id that were deleted. Only the
+   * row id provided was deleted, not the children, unless the child id is
+   * also listed
+   * @return 0 on success, else error code
+   */
+  int updateIdHint(std::vector<std::string> addedIdList,
+                   std::vector<std::string> updatedIdList,
+                   std::vector<std::string> deletedIdList);
+
   /*
    * @param columnNum The column number that the editor widget will be used for
    * starting from 0

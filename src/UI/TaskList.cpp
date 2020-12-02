@@ -17,19 +17,39 @@ namespace widget {
 TaskList::TaskList() { this->setObjectName("BookFiler Widget - Task List"); };
 TaskList::~TaskList(){};
 
-int TaskList::update() { return 0; }
+int TaskList::update() {
+  // TODO
+  return 0;
+}
+
+int updateIdHint(std::vector<std::string> addedIdList,
+                 std::vector<std::string> updatedIdList,
+                 std::vector<std::string> deletedIdList) {
+  // TODO
+  return 0;
+}
 
 int TaskList::setItemEditorWidget(
     int columnNum,
     std::function<std::shared_ptr<QWidget>()> editorWidgetCreator) {
+  // TODO
   return 0;
 }
 
-int TaskList::selectWhereStatus(int statusCode_) { return 0; }
+int TaskList::selectWhereStatus(int statusCode_) {
+  // TODO
+  return 0;
+}
 
-int TaskList::selectWhereAll() { return 0; }
+int TaskList::selectWhereAll() {
+  // TODO
+  return 0;
+}
 
-int TaskList::setPollDuration(std::chrono::milliseconds duration_) { return 0; }
+int TaskList::setPollDuration(std::chrono::milliseconds duration_) {
+  // TODO
+  return 0;
+}
 
 } // namespace widget
 } // namespace bookfiler

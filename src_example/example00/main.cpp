@@ -49,12 +49,30 @@ int main(int argc, char *argv[]) {
   std::shared_ptr<sqlite3> database(nullptr);
   database.reset(dbPtr, sqlite3_close);
 
-  // Unimplemented model similar to QSqlTableModel
-  // QAbstractItemModel *sqlTableModel = new QAbstractItemModel();
+  // columnMap
+  std::map<std::string, std::string> columnMap{
+      {"id", "id"},
+      {"parentId", "parentId"},
+      {"partsDone", "partsDone"},
+      {"partsTotal", "partsTotal"},
+      {"timeElapsed", "timeElapsed"},
+      {"timeRemaining", "timeRemaining"},
+      {"timeTotal", "timeTotal"},
+      {"CanCancel", "CanCancel"},
+      {"IsCancel", "IsCancel"},
+      {"CanPause", "CanPause"},
+      {"IsPause", "IsPause"},
+      {"status", "status"},
+      {"IsSelected", "IsSelected"},
+      {"title", "title"},
+      {"description", "description"}};
+
+  bookfiler::widget::SqliteModel *sqlModelPtr =
+      new bookfiler::widget::SqliteModel(database, "taskList", columnMap);
 
   // create task list
   bookfiler::widget::TaskList *taskListPtr = new bookfiler::widget::TaskList();
-  // taskListPtr->setModel(sqlTableModel);
+  taskListPtr->setModel(sqlModelPtr);
   taskListPtr->update();
 
   // create task toolbar

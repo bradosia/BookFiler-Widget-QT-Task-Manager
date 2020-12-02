@@ -11,6 +11,8 @@
 // local project
 #include "../src/UI/TaskList.hpp"
 #include "../src/UI/TaskToolBar.hpp"
+#include "../src/QModel/SqliteModel.hpp"
+#include "../src/QModel/SqliteModelTest.hpp"
 
 /*
  * bookfiler - widget

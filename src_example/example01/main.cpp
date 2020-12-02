@@ -18,8 +18,8 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlTableModel>
-#include <QWidget>
 #include <QVBoxLayout>
+#include <QWidget>
 
 // Bookfiler Libraries
 #include <BookFiler-Widget-QT-Task-Manager/Interface.hpp>
@@ -42,18 +42,35 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  QSqlTableModel *sqlTableModel = new QSqlTableModel(nullptr, database);
-  sqlTableModel->setTable("taskList");
-  sqlTableModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-  sqlTableModel->select();
+  // columnMap
+  std::map<std::string, std::string> columnMap{
+      {"id", "id"},
+      {"parentId", "parentId"},
+      {"partsDone", "partsDone"},
+      {"partsTotal", "partsTotal"},
+      {"timeElapsed", "timeElapsed"},
+      {"timeRemaining", "timeRemaining"},
+      {"timeTotal", "timeTotal"},
+      {"CanCancel", "CanCancel"},
+      {"IsCancel", "IsCancel"},
+      {"CanPause", "CanPause"},
+      {"IsPause", "IsPause"},
+      {"status", "status"},
+      {"IsSelected", "IsSelected"},
+      {"title", "title"},
+      {"description", "description"}};
+
+  bookfiler::widget::SqliteModelTest *sqlModelPtr =
+      new bookfiler::widget::SqliteModelTest(database, "taskList", columnMap);
 
   // create task list
   bookfiler::widget::TaskList *taskListPtr = new bookfiler::widget::TaskList();
-  taskListPtr->setModel(sqlTableModel);
+  taskListPtr->setModel(sqlModelPtr);
   taskListPtr->update();
 
   // create task toolbar
-  bookfiler::widget::TaskToolbar *taskToolbarPtr = new bookfiler::widget::TaskToolbar();
+  bookfiler::widget::TaskToolbar *taskToolbarPtr =
+      new bookfiler::widget::TaskToolbar();
 
   // Set up window
   QWidget *centralWidgetPtr = new QWidget();
