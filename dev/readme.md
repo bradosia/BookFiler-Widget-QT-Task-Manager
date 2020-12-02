@@ -1,18 +1,42 @@
 # Development Summary
 
-I need a QT5 widget written in C++. Only the widget implementation needs to be written, not an app. This project is a task manager that consists of three components: 
+I need a QT5 widget written in C++. Only the widget implementation needs to be written, not an app. This project is a task manager that consists of four components: 
 * The task list, which is an view that observes data from a sqlite3 `QAbstractItemModel`
 * the task items. Right now this component is unused because the task list component should generate a task tree.
 * the task toolbar. Provides controls for the task list and the sqlite3 `QAbstractItemModel`
+* the Sqlite Model, a `QAbstractItemModel` with a sqlite3 backend similar to `QSqlTableModel`
 The implementation requires a sqlite3 database backend. The header files are already written so the implementation should be filled in. See the photos for how the task manager should look.
 
-# sqlite3 `QAbstractItemModel` (The data model)
+# SqliteModel component
 
-This is the data model used with the TaskList. The sqlite3 `QAbstractItemModel` is similar to `QSqlTableModel`, except it is specialized to use `sqlite3`.
+The SqliteModel is a `QAbstractItemModel` with a sqlite3 backend similar to `QSqlTableModel`. This is the data model used with the view widget. It is specialized to use `sqlite3`.
 
 ## Why is `sqlite3` used and not `QSqlDatabase`?
 
-The reason `sqlite3` is used and not `QSqlDatabase` is because other modules this widget is used with won't be linked against QT, so a `sqlite3` database is passed between modules instead.
+The reason `sqlite3` is used and not `QSqlDatabase` is because other modules this widget is used with won't be linked against QT, so a `sqlite3` database is passed between modules instead. `QSqlDatabase` is not used because other modules don't link to QT, so using a sqlite3 database is more portable and a smaller dependency.
+
+## How to I start implementing the `SqliteModel` component?
+
+The header file written for the `SqliteModel` documents how the methods should work: [/src/QModel/SqliteModel.hpp](/src/QModel/SqliteModel.hpp)
+
+There is already a partial implementation for the `SqliteModel` to give an example of how the column names are pulled out of a `sqlite3` database table. Database query results need to somehow be cached in the model. One design idea may be to cache queries in a custom table index that will be used with the `QModelIndex`. A mostly empty file for this is at [/src/QModel/SqliteModelIndex.hpp](/src/QModel/SqliteModelIndex.hpp).
+
+## Sorting and Filtering Implementation
+
+Most of the time, in memory `sqlite3` databases will be used so using sql queries to refetch the `sqlite3` database table should be quick. Similar to `QSqlTableModel`, the `SqliteModel` also has `setSort` and `setFilter` methods, but the usage is different. See the header file [/src/QModel/SqliteModel.hpp](/src/QModel/SqliteModel.hpp) for my notes on these methods.
+
+## How is the tree represented in the `sqlite3` table?
+
+The `sqlite3` table must have the columns `id` and `parentId` (the name of the column can be different, but the columns must have the same purpose) so that the tree view children can be built off this. The `parentId` refers to the parent `id` row. This relationship establishes a parent-child relationship to make a tree.
+
+The column names may be mapped differently by passing all mapped column names to the `SqliteModel` constructor. For example, the `id` column is actully named `guid` and the `parentId` column is actully named `guid_parent`:
+
+```cpp
+bookfiler::widget::SqliteModel *sqlModelPtr =
+      new bookfiler::widget::SqliteModel(database, "tableName", {
+      {"id", "guid"},
+      {"parentId", "guid_parent"}});
+```
 
 ## SQL Table format
 The default table create statement is shown below. The Table name and column names may be different, but the user must explicitly map the names with the columnMap argument in `dataModel->setData(std::shared_ptr<sqlite3> database, std::string tableName, std::map<std::string, std::string> columnMap)`
@@ -38,7 +62,7 @@ CREATE TABLE "taskList" (
 )
 ```
 
-# TaskList
+# TaskList component
 
 Header: [/src/UI/TaskList.hpp](/src/UI/TaskList.hpp)
 
@@ -52,13 +76,13 @@ The widget only reads from the database to get data to display the tasks. There 
 1. The actual tasks will update the data model and signal when they need the widget view to update by calling `taskManagerWidget->update()` or `taskManagerWidget->updateIdHint(...);`
 2. The widget can be set to poll in intervals for the progress with `taskManagerWidget->setPollDuration()`
 
-# TaskListItem
+# TaskListItem component
 
 Header: [/src/UI/TaskItem.hpp](/src/UI/TaskItem.hpp)
 
 ![/reference/widget-laskitem.png](/reference/widget-laskitem.png?raw=true)
 
-# ToolBar
+# ToolBar component
 
 The toolbar filters tasks by the status code. The code 0 and 1 = In Progress, 2 = Success, 3 = Cancelled, 4 = Failed. There should also be a button to clear the filters.
 
