@@ -6,17 +6,7 @@ I need a QT5 widget written in C++. Only the widget implementation needs to be w
 * the task toolbar. Provides controls for the task list and the sqlite3 `QAbstractItemModel`
 The implementation requires a sqlite3 database backend. The header files are already written so the implementation should be filled in. See the photos for how the task manager should look.
 
-Header: [/src/UI/TaskList.hpp](/src/UI/TaskList.hpp)
-
-![/reference/widget-overview.png](/reference/widget-overview.png?raw=true)
-
-![/reference/widget-tasklist-subtasks.png](/reference/widget-tasklist-subtasks.png?raw=true)
-
-Header: [/src/UI/TaskItem.hpp](/src/UI/TaskItem.hpp)
-
-![/reference/widget-laskitem.png](/reference/widget-laskitem.png?raw=true)
-
-# sqlite3 `QAbstractItemModel`
+# sqlite3 `QAbstractItemModel` (The data model)
 
 This is the data model used with the TaskList. The sqlite3 `QAbstractItemModel` is similar to `QSqlTableModel`, except it is specialized to use `sqlite3`.
 
@@ -48,19 +38,33 @@ CREATE TABLE "taskList" (
 )
 ```
 
-# How does the toolbar work?
+# TaskList
+
+Header: [/src/UI/TaskList.hpp](/src/UI/TaskList.hpp)
+
+![/reference/widget-overview.png](/reference/widget-overview.png?raw=true)
+
+![/reference/widget-tasklist-subtasks.png](/reference/widget-tasklist-subtasks.png?raw=true)
+
+## How tasks are updated?
+
+The widget only reads from the database to get data to display the tasks. There are two ways to update task progress in the widget view:
+1. The actual tasks will update the data model and signal when they need the widget view to update by calling `taskManagerWidget->update()` or `taskManagerWidget->updateIdHint(...);`
+2. The widget can be set to poll in intervals for the progress with `taskManagerWidget->setPollDuration()`
+
+# TaskListItem
+
+Header: [/src/UI/TaskItem.hpp](/src/UI/TaskItem.hpp)
+
+![/reference/widget-laskitem.png](/reference/widget-laskitem.png?raw=true)
+
+# ToolBar
 
 The toolbar filters tasks by the status code. The code 0 and 1 = In Progress, 2 = Success, 3 = Cancelled, 4 = Failed. There should also be a button to clear the filters.
 
 Header: [/src/UI/TaskToolBar.hpp](/src/UI/TaskToolBar.hpp)
 
 ![/reference/widget-toolbar.png](/reference/widget-toolbar.png?raw=true)
-
-# How tasks are updated?
-
-The widget only reads from the database to get data to display the tasks. There are two ways to update task progress in the widget view:
-1. The actual tasks will update the data model and signal when they need the widget view to update by calling `taskManagerWidget->update()` or `taskManagerWidget->updateIdHint(...);`
-2. The widget can be set to poll in intervals for the progress with `taskManagerWidget->setPollDuration()`
 
 # Usage Instructions
 
