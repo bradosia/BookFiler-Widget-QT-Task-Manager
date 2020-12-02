@@ -24,6 +24,7 @@
 #include <QApplication>
 #include <QMainWindow>
 #include <QWidget>
+#include <QVBoxLayout>
 
 // Bookfiler Libraries
 #include <BookFiler-Widget-QT-Task-Manager/Interface.hpp>
@@ -37,12 +38,6 @@ int main(int argc, char *argv[]) {
   QApplication qtApp(argc, argv);
   QMainWindow qtMainWindow;
 
-  // create widget
-  std::shared_ptr<bookfiler::widget::TaskList> taskListWidget =
-      std::make_shared<bookfiler::widget::TaskList>();
-  qtMainWindow.setCentralWidget(taskListWidget.get());
-  qtMainWindow.show();
-
   // create a test database
   sqlite3 *dbPtr = nullptr;
   int rc = sqlite3_open("resources/example00.db", &dbPtr);
@@ -54,8 +49,27 @@ int main(int argc, char *argv[]) {
   std::shared_ptr<sqlite3> database(nullptr);
   database.reset(dbPtr, sqlite3_close);
 
-  taskListWidget->setData(database, "taskList");
-  taskListWidget->update();
+  // Unimplemented model similar to QSqlTableModel
+  // QAbstractItemModel *sqlTableModel = new QAbstractItemModel();
+
+  // create task list
+  bookfiler::widget::TaskList *taskListPtr = new bookfiler::widget::TaskList();
+  // taskListPtr->setModel(sqlTableModel);
+  taskListPtr->update();
+
+  // create task toolbar
+  bookfiler::widget::TaskToolbar *taskToolbarPtr =
+      new bookfiler::widget::TaskToolbar();
+
+  // Set up window
+  QWidget *centralWidgetPtr = new QWidget();
+  QVBoxLayout *layout = new QVBoxLayout;
+  layout->addWidget(taskToolbarPtr);
+  layout->addWidget(taskListPtr);
+  centralWidgetPtr->setLayout(layout);
+
+  qtMainWindow.setCentralWidget(centralWidgetPtr);
+  qtMainWindow.show();
 
   // Start the application loop
   qtApp.exec();
