@@ -20,14 +20,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_OSX_DEPLOYMENT_TARGET "10.10")
-#set(CMAKE_CXX_FLAGS "-g -Og -m64")
+set(CMAKE_CXX_FLAGS "-g -Og -m64")
 if(WIN32)
-  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS},Wa,-mbig-obj")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wa,-mbig-obj")
 endif()
 # set(CMAKE_CXX_FLAGS "-O3") set(CMAKE_SHARED_LINKER_FLAGS "-static
 # -static-libgcc -static-libstdc++ -Wl,-Bstatic,--whole-archive -lwinpthread
 # -Wl,--no-whole-archive")
-#set(CMAKE_BUILD_TYPE "Release")
+set(CMAKE_BUILD_TYPE "Release")
 
 # Automatically compile .ui to .h
 set(CMAKE_AUTOUIC ON)
