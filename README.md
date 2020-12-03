@@ -1,48 +1,6 @@
 # BookFiler Widget w/ QT: Task Manager Widget
 This is a QT5 widget that creates a task list to monitor task progress. This widget uses a `sqlite3` backend.
 
-# Usage Instructions
-
-Connect to your database:
-```cpp
-sqlite3 *dbPtr = nullptr;
-sqlite3_open("myDatabase.db", &dbPtr);
-// Using shared pointers when possible
-std::shared_ptr<sqlite3> database(nullptr);
-database.reset(dbPtr, sqlite3_close);
-```
-
-Create the tree widget and set the database data
-```cpp
-std::shared_ptr<bookfiler::widget::TreeImpl> treeWidget =
-      std::make_shared<bookfiler::widget::TreeImpl>();
-treeWidget->setData(database, "taskList");
-treeWidget->update();
-```
-
-## Sqlite3 Table format
-The default table create statement is shown below. The Table name and column names may be different, but the user must explicitly map the names.
-```sql
-CREATE TABLE "taskList" (
-	"id"	INTEGER NOT NULL,
-	"parentId"	INTEGER NOT NULL,
-	"partsDone"	INTEGER,
-	"partsTotal"	INTEGER,
-	"timeElapsed"	INTEGER,
-	"timeRemaining"	INTEGER,
-	"timeTotal"	INTEGER,
-	"CanCancel"	INTEGER NOT NULL,
-	"IsCancel"	INTEGER NOT NULL,
-	"CanPause"	INTEGER NOT NULL,
-	"IsPause"	INTEGER NOT NULL,
-	"status"	INTEGER,
-	"IsSelected"	INTEGER,
-	"title"	TEXT,
-	"description"	TEXT,
-	PRIMARY KEY("id" AUTOINCREMENT)
-)
-```
-
 # Build Instructions
 
 ## Windows - MinGW-w64
@@ -53,7 +11,7 @@ pacman -Syu
 pacman -S mingw-w64-x86_64-gcc git make mingw-w64-x86_64-cmake
 pacman -Rns cmake
 # restart MSYS2 so that we use the mingw cmake
-pacman -S mingw-w64-x86_64-boost mingw-w64-x86_64-sqlite3
+pacman -S mingw-w64-x86_64-boost mingw-w64-x86_64-tesseract-ocr
 ```
 Build:
 ```shell
@@ -85,4 +43,3 @@ make
 # Developers
 
 [Developer Notes](/dev/readme.md)
-
