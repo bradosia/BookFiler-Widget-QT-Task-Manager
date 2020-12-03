@@ -13,7 +13,6 @@
 
 // C++17
 #include <chrono>
-#include <functional>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -28,23 +27,15 @@
 // Local Project
 #include "TaskItem.hpp"
 
-#include <SqliteQueryEngine.hpp>
-
 /*
  * bookfiler - widget
  */
 namespace bookfiler {
 namespace widget {
 
-#if DEPENDENCY_SQLITE
-using bookfiler::core::TableContent;
-#endif
-
-class Q_DECL_EXPORT TaskList : public QTreeView {
+class TaskList : public QTreeView {
   Q_OBJECT
-protected:
-  std::vector<std::shared_ptr<TaskItem>> taskItemList{};
-  std::string tableName, viewRootId;
+private:
   std::map<std::string, std::string> columnMap{
       {"id", "id"},
       {"parentId", "parentId"},
@@ -61,18 +52,6 @@ protected:
       {"IsSelected", "IsSelected"},
       {"title", "title"},
       {"description", "description"}};
-
-#if DEPENDENCY_SQLITE
-  std::shared_ptr<sqlite3> database;
-  bookfiler::core::SQliteQueryEngine queryEngine;
-
-  std::shared_ptr<TaskItem> createTaskItemFromContent(TableContent &content,
-                                                      std::size_t index);
-#endif
-
-  /* Should only be used internally to add UI elements
-   */
-  int addItem(std::shared_ptr<TaskItem> taskItem_);
 
 public:
   TaskList();
@@ -137,15 +116,6 @@ public:
    * @return 0 on success, else error code
    */
   int setPollDuration(std::chrono::milliseconds duration);
-
-#if DEPENDENCY_SQLITE
-  // DO NOT USE, DO THIS ON THE MODEL INSTEAD
-  int setData(std::shared_ptr<sqlite3> database, std::string tableName,
-              std::map<std::string, std::string> columnMap =
-                  std::map<std::string, std::string>());
-#endif
-
-  friend class WidgetTaskListTest;
 };
 
 } // namespace widget

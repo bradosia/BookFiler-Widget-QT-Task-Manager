@@ -21,8 +21,6 @@
  * License: LGPLv3
  */
 #include <QWidget>
-#include <QPushButton>
-#include <QLabel>
 
 // Local Project
 #include "TaskList.hpp"
@@ -33,17 +31,21 @@
 namespace bookfiler {
 namespace widget {
 
-class Q_DECL_EXPORT TaskToolbar : public QWidget {
+class TaskToolbar : public QWidget {
   Q_OBJECT
 private:
   std::shared_ptr<TaskList> taskListWidget;
-  QPushButton* clear_suceeded,*clear_failed,*clear_canceled;
-  QLabel* lbl_clear_inactive;
-  QWidget* clear_toolbar;
 
 public:
-  explicit TaskToolbar(QWidget* parent=nullptr);
+  TaskToolbar();
   ~TaskToolbar();
+
+  /* Sets the TaskList widget that the toolbar will
+   * act on
+   * @param widget a shared pointer of the TaskList widget
+   * @return 0 on success, else error code
+   */
+  int setTaskList(std::shared_ptr<TaskList> widget);
 };
 
 } // namespace widget

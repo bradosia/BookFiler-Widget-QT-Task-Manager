@@ -36,7 +36,7 @@ namespace widget {
  * for queries to be used for the virtual data() function  from
  * QAbstractItemModel
  */
-class SqliteModelIndex {
+class Q_DECL_EXPORT SqliteModelIndex {
 private:
   SqliteModelIndex *parentIndex;
 
