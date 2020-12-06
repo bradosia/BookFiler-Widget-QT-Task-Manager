@@ -120,8 +120,9 @@ Separate all graphical GUI code into the `/src/UI/` directory. Anything with `QT
 ## Deliverables
 
 * Clean and commented code that follows the general design already provided and discussed in the readme.
-* Widget is implemented with the interface the header files outlined.
-* A working example [/src_example/example01/main.cpp](/src_example/example01/main.cpp).
+* All four components implemented
+* task manager works with the Sqlite Model backend.
+* Widget is implemented with the interface the header files outlined. Adaptations made if needed.
+* A working example [/src_example/example00/main.cpp](/src_example/example00/main.cpp).
 * tasks are selectable and copyable as tab separated values in the clipboard.
 * Widget works and looks as the photos show.
-
