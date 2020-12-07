@@ -33,7 +33,7 @@
 namespace bookfiler {
 namespace widget {
 
-class Q_DECL_EXPORT TaskToolbar : public QWidget {
+class TaskToolbar : public QWidget {
   Q_OBJECT
 private:
   std::shared_ptr<TaskList> taskListWidget;

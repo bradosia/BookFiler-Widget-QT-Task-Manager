@@ -46,7 +46,7 @@ namespace widget {
  * this model makes transformations to the indexed data for filtering, sorting,
  * and column re-ordering.
  */
-class Q_DECL_EXPORT SqliteModel : public QAbstractItemModel {
+class SqliteModel : public QAbstractItemModel {
   Q_OBJECT
 private:
   std::shared_ptr<sqlite3> database;

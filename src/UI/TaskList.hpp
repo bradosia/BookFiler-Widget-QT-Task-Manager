@@ -40,7 +40,7 @@ namespace widget {
 using bookfiler::core::TableContent;
 #endif
 
-class Q_DECL_EXPORT TaskList : public QTreeView {
+class TaskList : public QTreeView {
   Q_OBJECT
 protected:
   std::vector<std::shared_ptr<TaskItem>> taskItemList{};

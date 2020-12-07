@@ -48,7 +48,7 @@ namespace widget {
  * other modules don't link to QT, so using a sqlite3 database is more portable
  * and a smaller dependency.
  */
-class Q_DECL_EXPORT SqliteModelTest : public QSqlTableModel {
+class SqliteModelTest : public QSqlTableModel {
   Q_OBJECT
 private:
   std::string tableName, viewRootId;

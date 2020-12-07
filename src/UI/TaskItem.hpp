@@ -38,7 +38,7 @@
 namespace bookfiler {
 namespace widget {
 
-class Q_DECL_EXPORT TaskItem : public QWidget {
+class TaskItem : public QWidget {
   Q_OBJECT
 private:
   /* getProgress() is called periodically id task polling is enabled. Most tasks
