@@ -59,6 +59,11 @@ private:
   std::map<std::string, std::string> columnMap;
   std::map<int, int> columnNumMap{{0, 0}, {1, 1}, {2, 2}, {3, 3},
                                   {4, 4}, {5, 5}, {6, 6}};
+  std::vector<std::pair<std::string, std::string>> sortOrder;
+  std::vector<std::tuple<std::string, std::string, std::string>> filter;
+
+  std::string whereSQLCondition(const std::string &parentId) const;
+  std::string sortSQL() const;
 
 public:
   SqliteModel(std::shared_ptr<sqlite3> database_, std::string tableName_,
@@ -134,7 +139,7 @@ public:
    * @return 0 on success, else error code
    */
   int setFilter(std::vector<std::tuple<std::string, std::string, std::string>>
-                    sortOrderList);
+                    filterList);
 
   /* Essential QAbstractItemModel methods
    *

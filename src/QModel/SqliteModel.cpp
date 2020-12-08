@@ -142,13 +142,46 @@ QVariant SqliteModel::data(const QModelIndex &index, int role) const {
 
   std::string childId = *static_cast<std::string *>(index.internalPointer());
 
+  // Get the parentID from the SELECT of the id
+  std::string sqlQuery =
+      "SELECT `" + headerList[index.column()].toString().toStdString() + "` FROM `" + tableName
+      + "` WHERE `" + columnMap.at("id") + "`='" + childId + "'";
+  sqlQuery.append(" LIMIT 1;");
+
+  sqlite3_stmt *stmt = nullptr;
+  int rc = sqlite3_prepare_v2(database.get(), sqlQuery.c_str(), -1, &stmt, nullptr);
+  if (rc != SQLITE_OK) {
+      return QModelIndex();
+  }
+
+  std::string *value = nullptr;
+  rc = sqlite3_step(stmt);
+  while (rc != SQLITE_DONE && rc != SQLITE_OK) {
+      int colCount = sqlite3_column_count(stmt);
+      for (int colIndex = 0; colIndex < colCount; colIndex++) {
+          const unsigned char *valChar = sqlite3_column_text(stmt, colIndex);
+          if (valChar) {
+              value = new std::string(reinterpret_cast<const char *>(valChar));
+          }
+      }
+      rc = sqlite3_step(stmt);
+  }
+
+  rc = sqlite3_finalize(stmt);
+  if (rc != 0) {
+      return QVariant();
+  }
+
+
   // Normal data display
   if (role == Qt::DisplayRole) {
-    // return item->data(index.column());
+      return value ? QVariant::fromValue<QString>(QString::fromStdString(*value)) : QVariant();
+      //return item->data(index.column());
   }
   // Data displayed in the edit box
   else if (role == Qt::EditRole) {
-    // return item->data(index.column());
+     //return item->data(index.column());
+     return value ? QVariant::fromValue<QString>(QString::fromStdString(*value)) : QVariant();
   }
 
   // for all else
@@ -208,12 +241,10 @@ QModelIndex SqliteModel::index(int row, int column,
 
   // Get the parentID from the SELECT of the id
   std::string sqlQuery =
-      "SELECT `" + columnMap.at("id") + "` FROM `" + tableName;
-  if (parentId != "*") {
-    sqlQuery.append(" WHERE `" + columnMap.at("parentId") + "`='" + parentId +
-                    "'");
-  }
-  sqlQuery.append("` LIMIT " + std::to_string(row) + ",1;");
+      "SELECT `" + columnMap.at("id") + "` FROM `" + tableName + "`";
+  sqlQuery.append(whereSQLCondition(parentId));
+  sqlQuery.append(sortSQL());
+  sqlQuery.append(" LIMIT " + std::to_string(row) + ",1;");
 
   sqlite3_stmt *stmt = nullptr;
   rc = sqlite3_prepare_v2(database.get(), sqlQuery.c_str(), -1, &stmt, nullptr);
@@ -319,9 +350,8 @@ int SqliteModel::rowCount(const QModelIndex &parent) const {
   }
   std::cout << std::endl;
 #endif
-
-  if (parent.column() > 0)
-    return 0;
+  /*if (parent.column() > 0)
+    return 0;*/
 
   if (!parent.isValid())
     parentId = viewRootId;
@@ -335,13 +365,9 @@ int SqliteModel::rowCount(const QModelIndex &parent) const {
 #endif
 
   // Get the parentID from the SELECT of the id
-  std::string sqlQuery = "SELECT COUNT(*) FROM `" + tableName + "`";
-  if (parentId != "*") {
-    sqlQuery.append(" WHERE `" + columnMap.at("parentId") + "`='" + parentId +
-                    "'");
-  }
+  std::string sqlQuery = "SELECT COUNT(1) FROM `" + tableName + "`";
+  sqlQuery.append(whereSQLCondition(parentId));
   sqlQuery.append(";");
-
   sqlite3_stmt *stmt = nullptr;
   rc = sqlite3_prepare_v2(database.get(), sqlQuery.c_str(), -1, &stmt, nullptr);
   if (rc != SQLITE_OK)
@@ -385,6 +411,64 @@ bool SqliteModel::removeRows(int row, int count, const QModelIndex &parent) {
   // TODO
   return true;
 }
+
+int SqliteModel::setSort(std::vector<std::pair<std::string, std::string> > sortOrderList)
+{
+    sortOrder = sortOrderList;
+    return 0;
+}
+
+int SqliteModel::setFilter(std::vector<std::tuple<std::string, std::string, std::string> > filterList)
+{
+    filter = filterList;
+    return 0;
+}
+
+std::string SqliteModel::whereSQLCondition(const std::string &parentId) const
+{
+    std::string whereClause;
+    if (parentId != "*") {
+        whereClause.append(" `" + columnMap.at("parentId") + "`='" + parentId +
+                        "'");
+    }
+
+    std::string filterStrings;
+    for (auto filterElement: filter) {
+        auto fieldName = std::get<0>(filterElement);
+        auto value = std::get<1>(filterElement);
+        auto condition = std::get<2>(filterElement);
+        std::string filterString;
+        if (condition == "=") {
+            filterString = "`" + fieldName + "` = '" + value + "'";
+        } else if (condition == "match") {
+            filterString = "`" + fieldName + "` like '%" + value + "%'";
+        } else if (condition == "auto") {
+        }
+        filterStrings.append((filterString.empty() ? "" : " AND ") + filterString);
+    }
+
+    if (!whereClause.empty()) {
+        if (!filterStrings.empty()) {
+            whereClause = " AND ";
+        }
+    }
+    whereClause += filterStrings;
+    whereClause = whereClause.empty() ? "" : " WHERE " + whereClause;
+    return  whereClause;
+}
+
+std::string SqliteModel::sortSQL() const
+{
+    std::string sortSQLClause;
+    for (auto sortElement: sortOrder) {
+        std::string sortField = "`" + sortElement.first + "` " + sortElement.second;
+        sortSQLClause.append((sortSQLClause.empty() ? "" : " , ") + sortField);
+    }
+
+    sortSQLClause = (sortSQLClause.empty() ? "" : " ORDER BY ") + sortSQLClause;
+    return sortSQLClause;
+}
+
 
 } // namespace widget
 } // namespace bookfiler
